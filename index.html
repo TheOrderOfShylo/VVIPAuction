@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VVIP Auction | #TheOrder 🗝</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #333;
+            color: #ccc;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        header {
+            background-color: #4c96af;
+            color: white;
+            padding: 1em;
+            text-align: center;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .toggle-light-mode {
+            background: #555;
+            border: none;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            padding: 0.7em 1.2em;
+            border-radius: 5px;
+            box-shadow: 0 4px #999;
+            position: absolute;
+            right: 17px;
+            top: 4%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+        }
+        .container {
+            background-color: #444;
+            color: #ccc;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 2em;
+            max-width: 600px;
+            width: 90%;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, textarea {
+            padding: 0.8em;
+            border-radius: 4px;
+            border: 1px solid #666;
+            background-color: #555;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4c96af;
+            box-shadow: 0 0 5px rgba(76, 150, 175, 0.5);
+        }
+        button {
+            margin-top: 1em;
+            padding: 0.8em;
+            background-color: #4c96af;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #6045a0;
+        }
+        .highest-bid {
+            margin-top: 2em;
+            padding: 1.5em;
+            background-color: #555;
+            border-left: 5px solid #8345a0;
+            border-radius: 4px;
+        }
+        .error {
+            color: #ff6b6b;
+            margin-top: 0.5em;
+            font-size: 0.9em;
+        }
+        .success {
+            color: #4caf50;
+            margin-top: 1em;
+            font-size: 1em;
+            text-align: center;
+        }
+        .countdown {
+            font-size: 1.5em;
+            margin-top: 1em;
+            color: #ff6b6b;
+            text-align: center;
+        }
+        .auction-ended {
+            text-align: center;
+            font-size: 1.5em;
+            color: #ff6b6b;
+            margin-top: 1em;
+        }
+        .vvip-details-link {
+            margin: 1em 0;
+        }
+        .vvip-details-link a {
+            color: #4c96af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .vvip-details-link a:hover {
+            color: #6045a0;
+        }
+        /* Light mode styles */
+        body.light-mode {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        body.light-mode .container {
+            background-color: white;
+            color: #333;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        body.light-mode input {
+            background-color: #fff;
+            color: #333;
+            border-color: #ddd;
+        }
+        body.light-mode .highest-bid {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        body.light-mode .toggle-light-mode {
+            background: #4c96af;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>VVIP Auction 2025</h1>
+        <button class="toggle-light-mode" onclick="toggleLightMode()">Toggle Light Mode</button>
+    </header>
+    <div class="container">
+        <h2>Submit Best Bid</h2>
+        <form id="bid-form" action="https://formspree.io/f/xpwawlov" method="POST" onsubmit="return validateForm()">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="_replyto" required>
+            
+            <label for="bid">Bid Amount (£):</label>
+            <input type="number" id="bid" name="bid" min="7069" step="50" required>
+            
+            <div id="error-message" class="error"></div>
+            
+            <button type="submit">Submit Your Bid</button>
+        </form>
+        <div id="success-message" class="success" style="display:none;">Success. We will notify U if you win VVIP or awarded Runner-Up. Until then, happy bidding!</div>
+        <div class="highest-bid">
+            <h2>Current Bid:</h2>
+            <p id="highest-bid-amount">£<span id="bid-amount">6969</span></p>
+            <p id="highest-bidder">Status: <span id="bidder-name">active bids (1)</span></p>
+        </div>
+        <div class="countdown" id="countdown">
+            Time Left: <span id="time-left"></span>
+        </div>
+        <div class="auction-ended" id="auction-ended" style="display:none;">
+           VVIP Auction has ended. Thank U for participating 👁
+        </div>
+    </div>
+    <div class="vvip-details-link">
+        <a href="https://theorderofshylo.github.io/VVIP/" target="_blank">VVIP Details</a>
+    </div>
+    <footer>
+        <p>&copy; 2025 #TheOrder 🗝. All rights reserved.</p>
+    </footer>
+    <script>
+        const minimumBid = 7069;
+
+        function validateForm() {
+            const bidAmount = parseFloat(document.getElementById('bid').value);
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const errorMessage = document.getElementById('error-message');
+            
+            if (!name || !email) {
+                errorMessage.textContent = 'Please fill out all fields.';
+                return false;
+            }
+
+            if (isNaN(bidAmount) || bidAmount < minimumBid) {
+                errorMessage.textContent = `Bid amount must be at least £${minimumBid}.`;
+                return false;
+            }
+            
+            errorMessage.textContent = '';
+            document.getElementById('success-message').style.display = 'block';
+            return true;
+        }
+        
+const auctionEndTime = new Date("Jan 23, 2025 01:11:11 GMT").getTime();
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    // Convert current time to GMT
+    const nowGMT = now + (new Date().getTimezoneOffset() * 60000);
+    const timeLeft = auctionEndTime - nowGMT;
+
+    if (timeLeft < 0) {
+        clearInterval(countdownInterval);
+        document.getElementById("time-left").textContent = "Auction Ended";
+        document.getElementById("bid-form").style.display = "none";
+        return;
+    }
+
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+    document.getElementById("time-left").textContent = 
+        `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
+const countdownInterval = setInterval(updateCountdown, 1000);
+updateCountdown();
+
+        function toggleLightMode() {
+            document.body.classList.toggle('light-mode');
+        }
+    </script>
+</body>
+</html>
