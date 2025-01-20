@@ -170,7 +170,7 @@
             <input type="email" id="email" name="_replyto" required>
             
             <label for="bid">Bid Amount (£):</label>
-            <input type="number" id="bid" name="bid" min="7300" required>
+            <input type="number" id="bid" name="bid" min="7400" required>
             
             <div id="error-message" class="error"></div>
             
@@ -179,7 +179,7 @@
         <div id="success-message" class="success" style="display:none;">Success. We will notify U if you win VVIP or awarded Runner-Up. Until then, happy bidding!</div>
         <div class="highest-bid">
             <h2>Current Bid:</h2>
-            <p id="highest-bid-amount">£<span id="bid-amount">7272</span></p>
+            <p id="highest-bid-amount">£<span id="bid-amount">7373</span></p>
             <p id="highest-bidder">Status: <span id="bidder-name">active bids (4)</span></p>
         </div>
         <div class="countdown" id="countdown">
@@ -196,7 +196,7 @@
         <p>&copy; 2025 #TheOrder 🗝. All rights reserved.</p>
     </footer>
     <script>
-        const minimumBid = 7069;
+        const minimumBid = 7373;
 
         function validateForm() {
             const bidAmount = parseFloat(document.getElementById('bid').value);
